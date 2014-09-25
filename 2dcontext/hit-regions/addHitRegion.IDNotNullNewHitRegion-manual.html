@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>addHitRegion receives a dictionary object whose id is not null, and has a non-null control, and a previous region having the same control exists</title>
+    <script src="http://w3c-test.org/resources/testharness.js"></script>
+    <script src="http://w3c-test.org/resources/testharnessreport.js"></script>
+    <link rel="author" title="Mark Sadecki">
+    <link rel="help" href="http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion">
+</head>
+<body>
+<div>
+  <canvas height='100' width='100' id='canvas'>
+    <button id='button'>button</button>
+  </canvas>
+</div>
+
+<script>
+test(function () {
+        var canvas = document.getElementById("canvas");
+        // Reset context
+        canvas.width = canvas.width;
+        var button = document.getElementById("button");
+        var context = canvas.getContext("2d");
+        context.beginPath();
+        context.rect(10, 10, 40, 40);
+        context.fillStyle='green';
+        context.fill();
+        context.addHitRegion({ id: "buttonGreen", control: button });
+        context.beginPath();
+        context.rect(10, 60, 40, 40);
+        context.fillStyle='red';
+        context.fill();
+        context.addHitRegion({ id: "buttonRed", control: button });
+
+
+        // If the arguments object's id member is not null, then let previous region for this ID be the
+        // region identified by the ID given by the id member's value in this canvas element. If the id
+        // member is null or no such region currently exists, let previous region for this ID be null.
+        // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
+    }, "addHitRegion receives a dictionary object whose id is not null, and has a non-null control, and a previous region having the same control exists.");
+    </script>
+    <div id="log"></div>
+  </body>
+</html>
