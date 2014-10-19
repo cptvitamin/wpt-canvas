@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>drawFocusIfNeeded when a default path is provided and the associated fallback element is descendant of the element with focus but the element is not visible on the screen</title>
+    <script src="../../resources/testharness.js"></script>
+    <script src="../../resources/testharnessreport.js"></script>
+    <link rel="author" title="Mark Sadecki">
+    <link rel="help" href="http://www.w3.org/TR/2dcontext/#dom-context-2d-drawfocusifneeded">
+</head>
+
+<body>
+    <h1>Description</h1>
+    <p>This test has a lot of content before and after the canvas. To perform this test, the canvas should not be visible on the screen (it should be below the fold). If it is, make your window sufficiently small so that it is not visible. Tab to the first text link, then tab to the focusable fallback content in the canvas (this should also result in a visible focus indicator on a square in the canvas), then tab to the second text link. Reverse the process by shift-tabbing back to the first text link. This test passes if tabbing into the canvas scrolls the page so that the canvas scrolls into view in both directions.</p>
+    <p><a href='http://www.w3.org'>First Text Link</a>
+    </p>
+    <h1>An Excerpt from War of the Worlds by H.G. Wells</h1>
+    <p>"Don't, dear!" said my wife, knitting her brows and putting her hand on mine.</p>
+
+    <p>"Poor Ogilvy!" I said. "To think he may be lying dead there!"</p>
+
+    <p>My wife at least did not find my experience incredible. When I saw how deadly white her face was, I ceased abruptly.</p>
+
+    <p>"They may come here," she said again and again.</p>
+
+    <p>I pressed her to take wine, and tried to reassure her.</p>
+
+    <p>"They can scarcely move," I said.</p>
+
+    <p></p>
+
+    <p>The atmosphere of the earth, we now know, contains far more oxygen or far less argon (whichever way one likes to put it) than does Mars. The invigorating influences of this excess of oxygen upon the Martians indisputably did much to counterbalance the increased weight of their bodies. And, in the second place, we all overlooked the fact that such mechanical intelligence as the Martian possessed was quite able to dispense with muscular exertion at a pinch.</p>
+
+    <p>But I did not consider these points at the time, and so my reasoning was dead against the chances of the invaders. With wine and food, the confidence of my own table, and the necessity of reassuring my wife, I grew by insensible degrees courageous and secure.</p>
+
+    <p>"They have done a foolish thing," said I, fingering my wineglass. "They are dangerous because, no doubt, they are mad with terror. Perhaps they expected to find no living things--certainly no intelligent living things."</p>
+    <div>
+        <canvas height='100' width='100' id='canvas' style="border: 1px solid black;">
+            <div id='focus' tabindex='-1'>
+                <a href='http://www.w3.org/TR/2dcontext/#dom-context-2d-drawfocusifneeded'>Fallback</a>
+            </div>
+        </canvas>
+    </div>
+    <h1>An Excerpt from War of the Worlds by H.G. Wells</h1>
+    <p>"Don't, dear!" said my wife, knitting her brows and putting her hand on mine.</p>
+
+    <p>"Poor Ogilvy!" I said. "To think he may be lying dead there!"</p>
+
+    <p>My wife at least did not find my experience incredible. When I saw how deadly white her face was, I ceased abruptly.</p>
+
+    <p>"They may come here," she said again and again.</p>
+
+    <p>I pressed her to take wine, and tried to reassure her.</p>
+
+    <p>"They can scarcely move," I said.</p>
+
+    <p></p>
+
+    <p>The atmosphere of the earth, we now know, contains far more oxygen or far less argon (whichever way one likes to put it) than does Mars. The invigorating influences of this excess of oxygen upon the Martians indisputably did much to counterbalance the increased weight of their bodies. And, in the second place, we all overlooked the fact that such mechanical intelligence as the Martian possessed was quite able to dispense with muscular exertion at a pinch.</p>
+
+    <p>But I did not consider these points at the time, and so my reasoning was dead against the chances of the invaders. With wine and food, the confidence of my own table, and the necessity of reassuring my wife, I grew by insensible degrees courageous and secure.</p>
+
+    <p>"They have done a foolish thing," said I, fingering my wineglass. "They are dangerous because, no doubt, they are mad with terror. Perhaps they expected to find no living things--certainly no intelligent living things."</p>
+    <p><a href='http://www.w3.org'>Second Text Link</a>
+    </p>
+    <script>
+        test(function () {
+            // default path associated fallback has focus
+            var canvas = document.getElementById('canvas');
+            var focus = document.getElementById('focus');
+            var context = canvas.getContext('2d');
+
+            // Event Listeners
+            canvas.addEventListener("keypress", function (evt) {
+                evt = evt || window.event;
+                if (evt.keyCode == 9) {
+                    processTab(evt);
+                }
+            });
+            
+            // proccess TAB press
+            function processTab(evt) {
+                var elem = document.activeElement; // get the element that has focus
+                drawSquare();
+                drawFocus(elem); // draw a focus ring around that element
+            }
+            
+            // draw square
+            function drawSquare() {
+                context.beginPath();
+                context.rect(10, 10, 80, 80);
+                context.fillStyle = "white";
+                context.fill();
+            }
+            
+            // draws focus around the element that currently has focus
+            function drawFocus(elem) {
+                elem.focus();
+                context.drawFocusIfNeeded(elem);
+            }
+
+        }, 'drawFocusIfNeeded when a default path is provided and the associated fallback element is descendant of the element with focus but the element is not visible on the screen');
+    </script>
+    <div id="log"></div>
+</body>
+
+</html>
