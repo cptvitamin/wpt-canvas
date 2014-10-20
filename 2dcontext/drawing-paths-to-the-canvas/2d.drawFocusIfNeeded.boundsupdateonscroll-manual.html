@@ -71,19 +71,11 @@
             var context = canvas.getContext('2d');
 
             // Event Listeners
-            canvas.addEventListener("keypress", function (evt) {
-                evt = evt || window.event;
-                if (evt.keyCode == 9) {
-                    processTab(evt);
-                }
-            });
-            
-            // proccess TAB press
-            function processTab(evt) {
+            focus.addEventListener("focus", function() {
                 var elem = document.activeElement; // get the element that has focus
                 drawSquare();
                 drawFocus(elem); // draw a focus ring around that element
-            }
+            });
             
             // draw square
             function drawSquare() {
