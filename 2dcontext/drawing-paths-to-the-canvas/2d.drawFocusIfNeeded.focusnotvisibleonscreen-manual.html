@@ -74,6 +74,10 @@
                 drawSquare();
                 drawFocus(elem); // draw a focus ring around that element
             });
+            focus.addEventListener("blur", function() {
+                canvas.width = canvas.width;
+                drawSquare();
+            });
             
             // draw square
             function drawSquare() {
