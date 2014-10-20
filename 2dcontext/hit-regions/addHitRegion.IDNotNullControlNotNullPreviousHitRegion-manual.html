@@ -55,19 +55,6 @@
                     control: button
                 });
             });
-            
-            // proccess TAB press
-            function processTab(evt) {
-                var elem = document.activeElement; // get the element that has focus
-                drawSquare();
-                drawFocus(elem); // draw a focus ring around that element
-            }
-            
-            // draws focus around the element that currently has focus
-            function drawFocus(elem) {
-                elem.focus();
-                context.drawFocusIfNeeded(elem);
-            }
 
         }, "addHitRegion receives a dictionary object whose id is not null, assign a new hit region to this id with a non-null control.");
     </script>

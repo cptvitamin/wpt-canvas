@@ -35,6 +35,10 @@
             // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
             
             // adds a hit region with an id of null
+            context.beginPath();
+            context.rect(10, 10, 40, 40);
+            context.fillStyle = "red";
+            context.fill();
             context.addHitRegion({
                 id: "",
                 control: button
@@ -42,6 +46,10 @@
             
             // adds a new hit region to the same control but with an id
             newregion.addEventListener('click', function () {
+                context.beginPath();
+                context.rect(10, 60, 40, 40);
+                context.fillStyle = "green";
+                context.fill();
                 context.addHitRegion({
                     id: "button",
                     control: button
