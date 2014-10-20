@@ -12,11 +12,12 @@
 
 <body>
     <h1>Description</h1>
-    <p>On page load a hit region is added to the canvas with a non-null ID and a non-null control.  Verify using an accessibility API that the hit region exists and its id is null. Press the button below to add a new hit region to the same fallback element with an ID specified.  Verify using an accessibilty API that the hit region exists and has an ID of "button."</p>
+    <p>On page load a hit region is added to the canvas with a non-null ID and a non-null control.  Verify using an accessibility API that the hit region exists and its id is "region1". Press the button below to add a new hit region a second fallback element, using the same id as the first "region1".  Verify using an accessibilty API that the new hit region on "button2" exists and has an ID of "region1"</p>
     <button id="newregion">New Hit Region</button>
     <div>
         <canvas id="canvas">
-            <button id="button">button</button>
+            <button id="button1">button 1</button>
+            <button id="button2">button 2</button>
         </canvas>
     </div>
 
@@ -41,7 +42,7 @@
             context.fill();
             context.addHitRegion({
                 id: "region1",
-                control: button
+                control: button1
             });   
             
             // draw a green square and adds a new hit region to the same control (fallback button element) but with a new id
@@ -51,8 +52,8 @@
                 context.fillStyle = "green";
                 context.fill();
                 context.addHitRegion({
-                    id: "region2",
-                    control: button
+                    id: "region1",
+                    control: button2
                 });
             });
 
