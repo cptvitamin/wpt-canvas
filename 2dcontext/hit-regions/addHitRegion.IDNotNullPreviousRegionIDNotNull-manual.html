@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>addHitRegion receives a dictionary object whose id is not null, assign a new hit region to this id with a non-null control</title>
+    <title>addHitRegion receives a dictionary object whose id is not null, and has a non-null control, and a previous region having the same control exists</title>
     <script src="../../resources/testharness.js"></script>
     <script src="../../resources/testharnessreport.js"></script>
     <link rel="author" title="Mark Sadecki">
@@ -12,11 +12,12 @@
 
 <body>
     <h1>Description</h1>
-    <p>On page load a hit region is added to the canvas with a null ID.  Verify using an accessibility API that the hit region exists and its id is null. Press the button below to add a new hit region to the same fallback element with an ID specified.  Verify using an accessibilty API that the hit region exists and has an ID of "button."</p>
+    <p>On page load a hit region is added to the canvas with a non-null ID and a non-null control.  Verify using an accessibility API that the hit region exists and its id is "region1". Press the button below to add a new hit region a second fallback element, using the same id as the first "region1".  Verify using an accessibilty API that the new hit region on "button2" exists and has an ID of "region1"</p>
     <button id="newregion">New Hit Region</button>
     <div>
         <canvas id="canvas">
-            <button id="button">button</button>
+            <button id="button1">button 1</button>
+            <button id="button2">button 2</button>
         </canvas>
     </div>
 
@@ -28,38 +29,35 @@
             var newregion = document.getElementById('newregion');
             var button = document.getElementById("button");
             var context = canvas.getContext("2d");
-
-            // If the arguments object's id member is not null, then let previous region for this ID 
-            // be the region identified by the ID given by the id member's value in this canvas element. 
-            // If the id member is null or no such region currently exists, let previous region for this ID be null. 
+            
             // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
             
-            // adds a hit region with an id of null
+            // draw a red square and assign a hit region to the fallback button element
             context.beginPath();
             context.rect(10, 10, 40, 40);
             context.fillStyle = "red";
             context.fill();
             context.addHitRegion({
-                id: "",
-                control: button
-            });
+                id: "region1",
+                control: button1
+            });   
             
-            // adds a new hit region to the same control but with an id
+            // draw a green square and adds a new hit region to the same control (fallback button element) but with a new id
             newregion.addEventListener('click', function () {
                 context.beginPath();
                 context.rect(10, 60, 40, 40);
                 context.fillStyle = "green";
                 context.fill();
                 context.addHitRegion({
-                    id: "button",
-                    control: button
+                    id: "region1",
+                    control: button2
                 });
             });
 
-        }, "addHitRegion receives a dictionary object whose id is not null, assign a new hit region to this id with a non-null control.");
+        }, "addHitRegion receives a dictionary object whose id is not null, and has a non-null control, and a previous region having the same control exists.");
     </script>
     <div id="log"></div>
-    <!-- 2.12 addHitRegion receives a dictionary object whose id is not null, assign a new hit region to this id with a non-null control -->
+    <!-- 2.16 addHitRegion receives a dictionary object whose id is not null, with a non-null region, and a previous region for the id is not null -->
 </body>
 
 </html>

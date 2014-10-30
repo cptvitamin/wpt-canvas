@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>addHitRegion receives a dictionary object whose id is not null, with a non-null region, and a non-null control id where a previous non-null region, associated with this control, does exist in the hit region list but has a different id</title>
+    <script src="../../resources/testharness.js"></script>
+    <script src="../../resources/testharnessreport.js"></script>
+    <link rel="author" title="Mark Sadecki">
+    <link rel="help" href="http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion">
+</head>
+
+<body>
+<h1>Description</h1>
+    <p>Expected Result: A hit region, associated with the control and id region, where the id and the bounds of the control match the hit region is stored in the hit region list. The hit region previously associated with the control is removed from the list. However, since there is no API to enumerate the hit region list, mouse events received must only be received for the id in the new hit region location and not the old location. The same hit region is exposed as a best fit rectangle in screen coordinates in the platform accessibility API implementation for the corresponding fallback element.</p>
+
+<p>Test file: The test file should set up a hit region for a fallback element using addHitRegion with an associated id and the corresponding fallback element represented by the control at load time. A timer should be set up to replace the hit region for the same control with a new hit region that is distinctly different in location. The test file should print out mouse events associated with the ids in an area outside the canvas element. An accessibility test tool must be used so that the tester can validate that the region associated with the control matches the screen location of the hit region as a best fit rectangle.</p>
+    <button id="replaceregion">Replace Hit Region</button>
+    <div>
+        <canvas id="canvas">
+            <button id="button1">button 1</button>
+        </canvas>
+    </div>
+
+    <script>
+        test(function () {
+            var canvas = document.getElementById("canvas");
+            // Reset context
+            canvas.width = canvas.width;
+            var button = document.getElementById("button1");    // div with role button
+            var replaceregion = document.getElementById('replaceregion');
+            var context = canvas.getContext("2d");
+            
+            // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
+            
+            // draw a red square and assign a hit region to "button1"
+            context.beginPath();
+            context.rect(10, 10, 40, 40);
+            context.fillStyle = "red";
+            context.fill();
+            // add a hit region assigned to this path
+            context.addHitRegion({
+                id: "button1",
+                control: button1
+            });
+            
+            // draw a green square and adds a new hit region to the same control (fallback button element) but with the same id
+            replaceregion.addEventListener('click', function () {
+                context.beginPath();
+                context.rect(10, 60, 40, 40);
+                context.fillStyle = "green";
+                context.fill();
+                context.addHitRegion({
+                    id: "button2",
+                    control: button1
+                });
+            });
+
+        }, "addHitRegion receives a dictionary object whose id is not null, with a non-null region, and a non-null control id where a previous non-null region, associated with this control, does exist in the hit region list but has a different id");
+    </script>
+    <div id="log"></div>
+    <!-- 2.20 addHitRegion receives a dictionary object whose id is not null, with a non-null region, and a non-null control id where a previous non-null region, associated with this control, does exist in the hit region list but has a different id -->
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>removeHitRegion</title>
+    <script src="../../resources/testharness.js"></script>
+    <script src="../../resources/testharnessreport.js"></script>
+    <link rel="author" title="Mark Sadecki">
+    <link rel="help" href="http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion">
+</head>
+
+<body>
+    <h1>Description</h1>
+<h1>Description</h1>
+    <p>Expected Result: A hit region is only associated with the second control and id in a hit region list.  However, since there is no API to enumerate the hit region list, canvas mouse events received must have a matching id corresponding to the second region with the id matching location touched by the mouse pointer. Each hit region must must be exposed as a best fit rectangle in screen coordinates in the platform accessibility API implementation for the corresponding fallback elements.</p>
+
+<p>Test file: The test file should initially set up a hit region for each fallback element using addHitRegion with an associated id and the corresponding fallback element represented by the control at load time and then call removeHitRegion on the region having the first ID. The test file should print out mouse events associated with the ids in an area outside the canvas element. An accessibility test tool must be used so that the tester can validate that the region associated with the control matches the screen location of the hit region as a best fit rectangle.   </p>
+   
+    <button id="removeregion">Remove Hit Region</button>
+    <div>
+        <canvas id="canvas">
+            <div role="button" id="button1">button 1</div>
+        </canvas>
+    </div>
+
+    <script>
+        test(function () {
+            var canvas = document.getElementById("canvas");
+            // Reset context
+            canvas.width = canvas.width;
+            var button = document.getElementById("button1");    // div with role button
+            var removeregion = document.getElementById('removeregion');
+            var context = canvas.getContext("2d");
+            
+            // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
+            
+            // draw a red square and assign a hit region to "button1"
+            context.beginPath();
+            context.rect(10, 10, 40, 40);
+            context.fillStyle = "red";
+            context.fill();
+            // add a hit region assigned to this path
+            context.addHitRegion({
+                id: "button1",
+                control: button1
+            });
+            
+            // remove the hit region 
+            removeregion.addEventListener('click', function () {     
+                removeHitRegion("button1");
+            });
+
+        }, "addHitRegion is called twice. The first call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. The control is associated with a fallback <div> having a WAI-ARIA role=button and descendant text. The second call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. Both hit regions have distinctly different ids and controls. The control is associated with a fallback <a> having and descendant text. Each hit region is at distinctly different locations within the canvas. The path used to create each hit region is drawn on the canvas. Call removeHitRegion() for the ID of the first region.");
+    </script>
+    <div id="log"></div>
+    <!-- 2.21 addHitRegion is called twice. The first call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. The control is associated with a fallback <div> having a WAI-ARIA role="button" and descendant text. The second call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. Both hit regions have distinctly different ids and controls. The control is associated with a fallback <a> having and descendant text. Each hit region is at distinctly different locations within the canvas. The path used to create each hit region is drawn on the canvas. Call removeHitRegion() for the ID of the first region. -->
+</body>
+
+</html>
