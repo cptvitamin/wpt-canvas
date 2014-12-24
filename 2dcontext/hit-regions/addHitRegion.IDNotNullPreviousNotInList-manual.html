@@ -27,14 +27,15 @@
             // Reset context
             canvas.width = canvas.width;
             var newregion = document.getElementById('newregion');
-            var button = document.getElementById("button");
+            var button1 = document.getElementById("button1");
+            var button2= document.getElementById("button2");
             var context = canvas.getContext("2d");
             
             // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
             
             // draw a red square and assign a hit region to the fallback button element
             context.beginPath();
-            context.rect(10, 10, 40, 40);
+            context.re=t(10, 10, 40, 40);
             context.fillStyle = "red";
             context.fill();
             context.addHitRegion({
@@ -49,7 +50,7 @@
                 context.fillStyle = "green";
                 context.fill();
                 context.addHitRegion({
-                    id: "region1",
+                    id: "region2",
                     control: button2
                 });
             });
