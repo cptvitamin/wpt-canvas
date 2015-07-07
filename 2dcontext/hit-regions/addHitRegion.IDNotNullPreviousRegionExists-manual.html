@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>addHitRegion receives a dictionary object whose id is null, and a previous region has a null id</title>
+    <meta name="timeout" content="long">
+    <script src="../../resources/testharness.js"></script>
+    <script src="../../resources/testharnessreport.js"></script>
+    <link rel="author" title="Philippe Le Hegaret">
+    <link rel="help" href="http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion">
+</head>
+
+<body>
+<h1>Description</h1>
+    <p>Expected Result: The previous region for the id is null.</p>
+
+<p>Test file: The test file should set up a hit region that includes an id for a region that is null with an associated path representing a region at load time. Also at load time the hit region should be rendered in the DOM, outside of the physical canvas for testing. An HTML button should be visible that, when pressed, makes the new association of null id and then replaced the hit region information for visible inspection in the DOM so that the tester can validate that the region associated with the null id is null.</p>
+
+    <p>Your expected action: <span style='font-weight: bold' id='expectedAction'>none</span></p>
+    <div>
+        <canvas id="canvas">
+            <button id="button1">button 1</button>
+        </canvas>
+    </div>
+    <script>
+        var canvas = document.getElementById("canvas");
+
+        var hitregiontest = async_test("addHitRegion receives a dictionary object whose id is null, and a previous region has a null id");
+
+
+        // action messages and logging
+        var expectedAction = document.getElementById("expectedAction");
+
+        // Reset context
+        canvas.width = canvas.width;
+        var button1 = document.getElementById("button1");    // div with role button
+        var context = canvas.getContext("2d");
+
+        // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
+
+        hitregiontest.step(function () {
+            // draw a red square and assign a hit region to "button1"
+            context.beginPath();
+            context.rect(10, 10, 40, 40);
+            context.fillStyle = "red";
+            context.fill();
+            // add a hit region assigned to this path
+            context.addHitRegion({
+                id: "region1",
+                control: button1
+            });
+            expectedAction.textContent = "Click on the red square";
+            assert_true(true, "First addHitRegion is setup");
+        });
+
+
+        var hits = 0;
+        canvas.addEventListener('click',
+            hitregiontest.step_func(function (evt) {
+                if (hits === 0) {
+                    // first hit is on the first square
+                    assert_equals(evt.region, "region1", "Region is correct");
+                    // draw a green square and adds a new hit region to the same control     (fallback button element) but with the same id
+                    context.beginPath();
+                    context.rect(10, 60, 80, 80);
+                    context.fillStyle = "green";
+                    context.fill();
+                    context.removeHitRegion("region1");
+                    context.addHitRegion({
+                        id: "region1",
+                        control: button1
+                    });
+                    expectedAction.textContent = "Check the region 40x40 in the accessibility tool matches, then click again on the red square";
+                } else if (hits == 1) {
+                    // second hit is on the first square
+                    assert_not_equals(evt.region, "region1", "Region is correct");
+                    expectedAction.textContent = "Click on the green square now";
+                } else if (hits === 2) {
+                    // third hit is on the second square
+                    assert_equals(evt.region, "region1", "Region is correct");
+                }
+                hits++;
+                if (hits === 3) {
+                    hitregiontest.done();
+                    expectedAction.textContent = "Check the 80x80 region in the accessibility tool matches, and you're done";
+                }
+            }));
+    </script>
+    <div id="log"></div>
+    <!-- 2.15 addHitRegion receives a dictionary object whose id is null, and a previous region has a null id -->
+</body>
+
+</html>
