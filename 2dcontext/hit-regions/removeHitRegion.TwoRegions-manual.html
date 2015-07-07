@@ -16,42 +16,79 @@
     <p>Expected Result: A hit region is only associated with the second control and id in a hit region list.  However, since there is no API to enumerate the hit region list, canvas mouse events received must have a matching id corresponding to the second region with the id matching location touched by the mouse pointer. Each hit region must must be exposed as a best fit rectangle in screen coordinates in the platform accessibility API implementation for the corresponding fallback elements.</p>
 
 <p>Test file: The test file should initially set up a hit region for each fallback element using addHitRegion with an associated id and the corresponding fallback element represented by the control at load time and then call removeHitRegion on the region having the first ID. The test file should print out mouse events associated with the ids in an area outside the canvas element. An accessibility test tool must be used so that the tester can validate that the region associated with the control matches the screen location of the hit region as a best fit rectangle.   </p>
-   
-    <button id="removeregion">Remove Hit Region</button>
+
+    <p>Your expected action: <span style='font-weight: bold' id='expectedAction'>none</span></p>
     <div>
         <canvas id="canvas">
-            <div role="button" id="button1">button 1</div>
+            <div role="button" id="div1">div 1</div>
+            <a id='anchor1' href="#canvas">hyperlink</a>
         </canvas>
     </div>
 
     <script>
-        test(function () {
-            var canvas = document.getElementById("canvas");
-            // Reset context
-            canvas.width = canvas.width;
-            var button = document.getElementById("button1");    // div with role button
-            var removeregion = document.getElementById('removeregion');
-            var context = canvas.getContext("2d");
-            
-            // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
-            
-            // draw a red square and assign a hit region to "button1"
+        var canvas = document.getElementById("canvas");
+
+        var hitregiontest = async_test("addHitRegion is called twice. The first call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. The control is associated with a fallback <div> having a WAI-ARIA role=button and descendant text. The second call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. Both hit regions have distinctly different ids and controls. The control is associated with a fallback <a> having and descendant text. Each hit region is at distinctly different locations within the canvas. The path used to create each hit region is drawn on the canvas. Call removeHitRegion() for the ID of the first region.");
+
+
+        // action messages and logging
+        var expectedAction = document.getElementById("expectedAction");
+
+        // Reset context
+        canvas.width = canvas.width;
+        var div1 = document.getElementById("div1");    // div with role button
+        var anchor1 = document.getElementById("anchor1");    // anchor
+        var context = canvas.getContext("2d");
+
+        // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
+
+        hitregiontest.step(function () {
+            // draw a red square and assign a hit region to "div1"
             context.beginPath();
             context.rect(10, 10, 40, 40);
             context.fillStyle = "red";
             context.fill();
             // add a hit region assigned to this path
             context.addHitRegion({
-                id: "button1",
-                control: button1
+                id: "div1",
+                control: div1
             });
-            
-            // remove the hit region 
-            removeregion.addEventListener('click', function () {     
-                removeHitRegion("button1");
+            context.beginPath();
+            context.rect(10, 60, 80, 80);
+            context.fillStyle = "green";
+            context.fill();
+            context.addHitRegion({
+                id: "anchor1",
+                control: anchor1
             });
+            expectedAction.textContent = "Click on the red square";
+            assert_true(true, "First addHitRegion is setup");
+        });
 
-        }, "addHitRegion is called twice. The first call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. The control is associated with a fallback <div> having a WAI-ARIA role=button and descendant text. The second call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. Both hit regions have distinctly different ids and controls. The control is associated with a fallback <a> having and descendant text. Each hit region is at distinctly different locations within the canvas. The path used to create each hit region is drawn on the canvas. Call removeHitRegion() for the ID of the first region.");
+
+        var hits = 0;
+        canvas.addEventListener('click',
+            hitregiontest.step_func(function (evt) {
+                if (hits === 0) {
+                    // first hit is on the first square
+                    assert_equals(evt.region, "div1", "Region is correct");
+                    // draw a green square and adds a new hit region to the same control     (fallback button element) but with the same id
+                    context.removeHitRegion("div1");
+                    expectedAction.textContent = "Check the region 40x40 in the accessibility tool matches, then click again on the red square";
+                } else if (hits == 1) {
+                    // second hit is on the first square
+                    assert_not_equals(evt.region, "div1", "Region is correct");
+                    expectedAction.textContent = "Click on the green square now";
+                } else if (hits === 2) {
+                    // third hit is on the second square
+                    assert_equals(evt.region, "anchor1", "Region is correct");
+                }
+                hits++;
+                if (hits === 3) {
+                    hitregiontest.done();
+                    expectedAction.textContent = "Check the 80x80 region in the accessibility tool matches, and you're done";
+                }
+            }));
     </script>
     <div id="log"></div>
     <!-- 2.21 addHitRegion is called twice. The first call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. The control is associated with a fallback <div> having a WAI-ARIA role="button" and descendant text. The second call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. Both hit regions have distinctly different ids and controls. The control is associated with a fallback <a> having and descendant text. Each hit region is at distinctly different locations within the canvas. The path used to create each hit region is drawn on the canvas. Call removeHitRegion() for the ID of the first region. -->
