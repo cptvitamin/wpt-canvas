@@ -28,3 +28,4 @@ This effort is being organized by the Canvas TF here: http://www.w3.org/wiki/HTM
 * http://cptvitamin.github.io/wpt-canvas/2dcontext/hit-regions/addHitRegion.nullpathvalidID.html
 * http://cptvitamin.github.io/wpt-canvas/2dcontext/hit-regions/addHitRegions-NotSupportedError-01.html
 * http://cptvitamin.github.io/wpt-canvas/2dcontext/hit-regions/hitregions-members-exist.html
+* http://cptvitamin.github.io/wpt-canvas/2dcontext/hit-regions/addHitRegion.IDNotNullPreviousInList-manual.html
