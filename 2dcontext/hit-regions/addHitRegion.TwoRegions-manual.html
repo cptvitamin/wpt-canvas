@@ -13,13 +13,13 @@
 <body>
     <h1>Description</h1>
 <h1>Description</h1>
-    <p>Expected Result: A hit region is associated with each control and id in a hit region list and each is associated with the respective control in fallback content.  However, since there is no API to enumerate the hit region list, canvas mouse events received must have a matching id corresponding to the respective region with the id matching location touched by the mouse pointer. Each hit region must must be exposed as a best fit rectangle in screen coordinates in the platform accessibility API implementation for the corresponding fallback elements.</p>
+    <p id='expectedDescription'>Expected Result: A hit region is associated with each control and id in a hit region list and each is associated with the respective control in fallback content.  However, since there is no API to enumerate the hit region list, canvas mouse events received must have a matching id corresponding to the respective region with the id matching location touched by the mouse pointer. Each hit region must must be exposed as a best fit rectangle in screen coordinates in the platform accessibility API implementation for the corresponding fallback elements.</p>
 
 <p>The test file should set up a hit region for each fallback element using addHitRegion with an associated id and the corresponding fallback element represented by the control at load time. The test file should print out mouse events associated with the id in an area outside the canvas element. </p>
     <div>
         <canvas id="canvas">
-            <div role="button" id="button1">button 1</div>
-            <a id="link1">link 1</a>
+            <button id="button1">button 1</button>
+            <a href='#expectedDescription' id="link1">link 1</a>
         </canvas>
     </div>
 
@@ -31,9 +31,9 @@
             var button = document.getElementById("button1");    // div with role button
             var link = document.getElementById("link1");        // link
             var context = canvas.getContext("2d");
-            
+
             // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
-            
+
             // draw a red square and assign a hit region to "button1"
             context.beginPath();
             context.rect(10, 10, 40, 40);
@@ -44,7 +44,7 @@
                 id: "button1",
                 control: button
             });
-            
+
             // draw a green square and assign a hit region to the "link1"
             context.beginPath();
             context.rect(10, 60, 40, 40);
@@ -53,7 +53,7 @@
             context.addHitRegion({
                 id: "link1",
                 control: link
-            });            
+            });
 
         }, "addHitRegion is called twice. The first call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. The control is associated with a fallback <div> having a WAI-ARIA role=button and descendant text. The second call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. Both hit regions have distinctly different ids and controls. The control is associated with a fallback <a> having and descendant text. Each hit region is at distinctly different locations within the canvas. The path used to create each hit region is drawn on the canvas.");
     </script>
