@@ -20,14 +20,13 @@
     <p>Your expected action: <span style='font-weight: bold' id='expectedAction'>none</span></p>
     <div>
         <canvas id="canvas">
-            <button id="button1">button 1</button>
         </canvas>
+        <button id="button1">button</button>
     </div>
     <script>
         var canvas = document.getElementById("canvas");
 
         var hitregiontest = async_test("addHitRegion receives a dictionary object whose id is null, and a previous region has a null id");
-
 
         // action messages and logging
         var expectedAction = document.getElementById("expectedAction");
@@ -47,44 +46,20 @@
             context.fill();
             // add a hit region assigned to this path
             context.addHitRegion({
-                id: "region1",
+                id: null,
                 control: button1
             });
-            expectedAction.textContent = "Click on the red square";
-            assert_true(true, "First addHitRegion is setup");
+            expectedAction.textContent = "Click on the green square";
+            assert_true(true, "addHitRegion is setup");
         });
 
 
         var hits = 0;
         canvas.addEventListener('click',
             hitregiontest.step_func(function (evt) {
-                if (hits === 0) {
-                    // first hit is on the first square
-                    assert_equals(evt.region, "region1", "Region is correct");
-                    // draw a green square and adds a new hit region to the same control     (fallback button element) but with the same id
-                    context.beginPath();
-                    context.rect(10, 60, 80, 80);
-                    context.fillStyle = "green";
-                    context.fill();
-                    context.removeHitRegion("region1");
-                    context.addHitRegion({
-                        id: "region1",
-                        control: button1
-                    });
-                    expectedAction.textContent = "Check the region 40x40 in the accessibility tool matches, then click again on the red square";
-                } else if (hits == 1) {
-                    // second hit is on the first square
-                    assert_not_equals(evt.region, "region1", "Region is correct");
-                    expectedAction.textContent = "Click on the green square now";
-                } else if (hits === 2) {
-                    // third hit is on the second square
-                    assert_equals(evt.region, "region1", "Region is correct");
-                }
-                hits++;
-                if (hits === 3) {
-                    hitregiontest.done();
-                    expectedAction.textContent = "Check the 80x80 region in the accessibility tool matches, and you're done";
-                }
+                assert_not_equals(evt.region, "region", "Region is null");
+                expectedAction.textContent = "none";
+                hitregiontest.done();
             }));
     </script>
     <div id="log"></div>
