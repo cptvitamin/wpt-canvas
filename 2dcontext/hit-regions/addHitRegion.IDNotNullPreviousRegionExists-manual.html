@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>addHitRegion receives a dictionary object whose id is null, and a previous region has a null id</title>
+    <meta name="timeout" content="long">
+    <script src="../../resources/testharness.js"></script>
+    <script src="../../resources/testharnessreport.js"></script>
+    <link rel="author" title="Philippe Le Hegaret">
+    <link rel="help" href="http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion">
+</head>
+
+<body>
+<h1>Description</h1>
+    <p>Expected Result: The previous region for the id is null.</p>
+
+<p>Test file: The test file should set up a hit region that includes an id for a region that is null with an associated path representing a region at load time. Also at load time the hit region should be rendered in the DOM, outside of the physical canvas for testing. An HTML button should be visible that, when pressed, makes the new association of null id and then replaced the hit region information for visible inspection in the DOM so that the tester can validate that the region associated with the null id is null.</p>
+
+    <p>Your expected action: <span style='font-weight: bold' id='expectedAction'>none</span></p>
+    <div>
+        <canvas id="canvas">
+        </canvas>
+        <button id="button1">button</button>
+    </div>
+    <script>
+        var canvas = document.getElementById("canvas");
+
+        var hitregiontest = async_test("addHitRegion receives a dictionary object whose id is null, and a previous region has a null id");
+
+        // action messages and logging
+        var expectedAction = document.getElementById("expectedAction");
+
+        // Reset context
+        canvas.width = canvas.width;
+        var button1 = document.getElementById("button1");    // div with role button
+        var context = canvas.getContext("2d");
+
+        // http://www.w3.org/TR/2dcontext/#dom-context-2d-addhitregion
+
+        hitregiontest.step(function () {
+            // draw a red square and assign a hit region to "button1"
+            context.beginPath();
+            context.rect(10, 10, 40, 40);
+            context.fillStyle = "red";
+            context.fill();
+            // add a hit region assigned to this path
+            context.addHitRegion({
+                id: null,
+                control: button1
+            });
+            expectedAction.textContent = "Click on the green square";
+            assert_true(true, "addHitRegion is setup");
+        });
+
+
+        var hits = 0;
+        canvas.addEventListener('click',
+            hitregiontest.step_func(function (evt) {
+                assert_not_equals(evt.region, "region", "Region is null");
+                expectedAction.textContent = "none";
+                hitregiontest.done();
+            }));
+    </script>
+    <div id="log"></div>
+    <!-- 2.15 addHitRegion receives a dictionary object whose id is null, and a previous region has a null id -->
+</body>
+
+</html>
