@@ -59,7 +59,7 @@
         var hits = 0;
         canvas.addEventListener('click',
             hitregiontest.step_func(function (evt) {
-                if (hits === 0) {
+                if (hits == 0) {
                     // first hit is on the first square
                     assert_equals(evt.region, "button1", "Region is correct");
                     // draw a green square and adds a new hit region to the same control     (fallback button element) but with the same id
@@ -77,12 +77,12 @@
                     // second hit is on the first square
                     assert_not_equals(evt.region, "button1", "Region is correct");
                     expectedAction.textContent = "Click on the green square now";
-                } else if (hits === 2) {
+                } else if (hits == 2) {
                     // third hit is on the second square
                     assert_equals(evt.region, "button1", "Region is correct");
                 }
                 hits++;
-                if (hits === 3) {
+                if (hits == 3) {
                     hitregiontest.done();
                     expectedAction.textContent = "Check the 80x80 region in the accessibility tool matches, and you're done";
                 }
