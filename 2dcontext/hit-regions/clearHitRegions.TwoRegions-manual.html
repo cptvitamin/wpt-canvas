@@ -55,8 +55,7 @@
             }); 
             
             // call clearHitRegions()
-            context.clearRect(9,59,45,45)
-            // context.clearHitRegions();            
+            context.clearHitRegions();            
 
         }, "addHitRegion is called twice. The first call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. The control is associated with a fallback <div> having a WAI-ARIA role=button and descendant text. The second call receives a dictionary object whose id is not null, with a non-null region, and a non-null control. Both hit regions have distinctly different ids and controls. The control is associated with a fallback <a> having and descendant text. Each hit region is at distinctly different locations within the canvas. The path used to create each hit region is drawn on the canvas. Call clearHitRegions() for the ID of the first region. ");
     </script>
